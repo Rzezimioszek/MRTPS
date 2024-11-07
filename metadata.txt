@@ -1,0 +1,53 @@
+# This file contains metadata for your plugin.
+
+# This file should be included when you package your plugin.# Mandatory items:
+
+[general]
+name=Multi Raster Transparency Pixel Setter
+qgisMinimumVersion=3.38
+description=Set transparency pixel for multiple raster layers
+version=1.0
+author=Łukasz Świątek
+email=lukasz.swiatek1996@gmail.com
+
+about= 
+	EN: Plugin allow to set color of transparency pixel, this is similar to build-in properties option, but working with multiple layers at once.
+	
+	PL: Plugin pozwala na ustawienie koloru pixela interpretowanego jako przezroczysty, jest to praktycznie to samo co można zrobić we właściwościach warstwy, ale na wiekszej ilości warstw niż jedna.
+
+tracker=https://github.com/Rzezimioszek/MRTPS/issues
+repository=https://github.com/Rzezimioszek/MRTPS
+# End of mandatory metadata
+
+# Recommended items:
+
+hasProcessingProvider=no
+# Uncomment the following line and add your changelog:
+changelog=
+	* 1.0
+		- fist offcial release
+		- new icon
+
+# Tags are comma separated with spaces allowed
+tags=python, transparency, transparent, pixel, raster, png, tiff, tif, jpg, evr, rgb, multiple
+
+homepage=http://github.com/Rzezimioszek
+category=Plugins
+icon=icon.png
+# experimental flag
+experimental=False
+
+# deprecated flag (applies to the whole plugin, not just a single version)
+deprecated=False
+
+# Since QGIS 3.8, a comma separated list of plugins to be installed
+# (or upgraded) can be specified.
+# Check the documentation for more information.
+# plugin_dependencies=
+
+Category of the plugin: Raster, Vector, Database or Web
+# category=
+
+# If the plugin can run on QGIS Server.
+server=False
+
