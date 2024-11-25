@@ -327,26 +327,31 @@ class MRTPS:
         
     def set_transparency(self):
     
-        if (r := self.dockwidget.leR.text()).isnumeric():
+        r = self.dockwidget.leR.text()
+        try:
             r = float(r)
-        else:
+        except:
             r = 255.0
             
         r = self.valid_float(r)
             
-        if (g := self.dockwidget.leG.text()).isnumeric():
+        g = self.dockwidget.leG.text()
+        try:
             g = float(g)
-        else:
+        except:
             g = 255.0
         
         g = self.valid_float(g)
         
-        if (b := self.dockwidget.leB.text()).isnumeric():
+        b = self.dockwidget.leB.text()
+        try:
             b = float(b)
-        else:
+        except:
             b = 255.0
             
         b = self.valid_float(b)
+        
+        QgsMessageLog.logMessage(f"Red: {r}\tGreen: {g}\tBlue: {b}", "mrtps", level=Qgis.Info)
             
         if (tr := self.dockwidget.leT.text()).isnumeric():
             tr = 1 - (float(tr) / 100)
@@ -373,16 +378,23 @@ class MRTPS:
          
     def set_transparency_single(self):
     
-        if (min := self.dockwidget.leMin.text()).isnumeric():
+        # TODO add feature to work with float after comma values
+        vvv = self.dockwidget.leMin.text().isnumeric()
+    
+        min = self.dockwidget.leMin.text()
+        try:
             min = float(min)
-        else:
+        except:
             min = 0.0
             
 
-        if (max := self.dockwidget.leMax.text()).isnumeric():
+        max = self.dockwidget.leMax.text()
+        try:
             max = float(max)
-        else:
+        except:
             max = 1.0
+            
+        QgsMessageLog.logMessage(f"Min: {min}\tMax: {max}", "mrtps", level=Qgis.Info)
         
             
         if (tr := self.dockwidget.leT2.text()).isnumeric():
