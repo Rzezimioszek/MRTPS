@@ -247,9 +247,48 @@ class MRTPS:
             renderer = layer.renderer()
             renderer.setRasterTransparency(transparency)
             
+    def set_transparency_by_xml(self):
+    
+        filename = QFileDialog.getOpenFileName(self.dockwidget, "Select xml file with transparency", "", "text file (*.txt *.xml)")
+        
+
+        try:
+            with open(str(filename[0]), "r", encoding="cp1252") as file:
+                QgsMessageLog.logMessage(f"1", "mrtps", level=Qgis.Info)
+                lines = file.readlines()
+                QgsMessageLog.logMessage(f"2", "mrtps", level=Qgis.Info)
+        except Exception as e:
+            QgsMessageLog.logMessage(f"Can't open file: {str(filename[0])}\n{e}", "mrtps", level=Qgis.Info)
+            return
+            
+        values = []
+        for line in lines:
+            QgsMessageLog.logMessage(f"{line}", "mrtps", level=Qgis.Info)
+            if line.startswith("#"):
+                continue
+            line = line.replace("\n", "")
+            rgb = line.split("\t")
+            if len(rgb) >= 3:
+                values.append(rgb)
+    
+        for raster in self.dockwidget.listWidget.selectedItems():
+        
+            layers = QgsProject.instance().mapLayersByName(raster.text())
+            
+            layer = layers[0]
+            transparency = QgsRasterTransparency()
+           
+            tp = [QgsRasterTransparency.TransparentSingleValuePixel(minimum=float(v[0]), maximum=float(v[1]),
+                opacity=(1  - (float(v[2]) / 100))) for v in values]
+            transparency.setTransparentSingleValuePixelList(tp)
+            
+            renderer = layer.renderer()
+            renderer.setRasterTransparency(transparency)
+        
+            
     def set_transparency_by_txt(self):
     
-        filename = QFileDialog.getOpenFileName(self.dockwidget, "Select xml file with transparency", "", "text file (*.txt)")
+        filename = QFileDialog.getOpenFileName(self.dockwidget, "Select xml file with transparency", "", "text file (*.txt *.xml)")
         
 
         try:
@@ -277,7 +316,9 @@ class MRTPS:
             
             layer = layers[0]
             transparency = QgsRasterTransparency()
-            tp = [QgsRasterTransparency.TransparentThreeValuePixel(float(v[0]), float(v[1]), float(v[2]), 1  - (float(v[3]) / 100)) for v in values]
+            tp = [QgsRasterTransparency.TransparentThreeValuePixel(red=float(v[0]),
+                green=float(v[1]), blue=float(v[2]),
+                opacity=(1  - (float(v[3]) / 100))) for v in values]
             transparency.setTransparentThreeValuePixelList(tp)
             
             renderer = layer.renderer()
@@ -323,14 +364,55 @@ class MRTPS:
             layer = layers[0]
                     
             transparency = QgsRasterTransparency()
-            tp = QgsRasterTransparency.TransparentThreeValuePixel(r, g, b, tr)
+            tp = QgsRasterTransparency.TransparentThreeValuePixel(red=r, green=g, blue=b, opacity=tr)
             transparency.setTransparentThreeValuePixelList([tp])
             
             renderer = layer.renderer()
             renderer.setRasterTransparency(transparency)
         
          
+    def set_transparency_single(self):
+    
+        if (min := self.dockwidget.leMin.text()).isnumeric():
+            min = float(min)
+        else:
+            min = 0.0
+            
+
+        if (max := self.dockwidget.leMax.text()).isnumeric():
+            max = float(max)
+        else:
+            max = 1.0
         
+            
+        if (tr := self.dockwidget.leT2.text()).isnumeric():
+            tr = 1 - (float(tr) / 100)
+            
+        else:
+            tr = 0.0
+            
+        tr = self.valid_float(tr, 1.0)
+        
+        imin = self.dockwidget.cbMin.isChecked() 
+        imax = self.dockwidget.cbMax.isChecked() 
+        
+            
+        
+        for raster in self.dockwidget.listWidget.selectedItems():
+        
+            layers = QgsProject.instance().mapLayersByName(raster.text())
+            
+            layer = layers[0]
+                    
+            transparency = QgsRasterTransparency()
+            tp = QgsRasterTransparency.TransparentSingleValuePixel(minimum=min, maximum=max,
+                includeMinimum=imin, includeMaximum=imax,
+                opacity=tr)
+                
+            transparency.setTransparentSingleValuePixelList([tp])
+            
+            renderer = layer.renderer()
+            renderer.setRasterTransparency(transparency)
 
     def run(self):
         """Run method that loads and starts the plugin"""
@@ -352,6 +434,9 @@ class MRTPS:
                 self.dockwidget.pbAddT.clicked.connect(lambda: self.set_transparency())
                 self.dockwidget.pbClearT.clicked.connect(lambda: self.clear_transparency())
                 self.dockwidget.pbXML.clicked.connect(lambda: self.set_transparency_by_txt())
+                
+                self.dockwidget.pbOneP.clicked.connect(lambda: self.set_transparency_single())
+                self.dockwidget.pbXML2.clicked.connect(lambda: self.set_transparency_by_xml())
                 
                 self.dockwidget.pbAll.clicked.connect(lambda: self.dockwidget.listWidget.selectAll())
                 self.dockwidget.pbClear.clicked.connect(lambda: self.dockwidget.listWidget.clearSelection())

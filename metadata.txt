@@ -6,7 +6,7 @@
 name=Multi Raster Transparency Pixel Setter
 qgisMinimumVersion=3.38
 description=Set transparency pixel for multiple raster layers
-version=1.0
+version=1.1
 author=Łukasz Świątek
 email=lukasz.swiatek1996@gmail.com
 
@@ -24,14 +24,15 @@ repository=https://github.com/Rzezimioszek/MRTPS
 hasProcessingProvider=no
 # Uncomment the following line and add your changelog:
 changelog=
+	* 1.1
+		- support for one band rasters
 	* 1.0
-		- fist offcial release
-		- new icon
+		- first offcial release
 
 # Tags are comma separated with spaces allowed
 tags=python, transparency, transparent, pixel, raster, png, tiff, tif, jpg, evr, rgb, multiple
 
-homepage=http://github.com/Rzezimioszek
+homepage=https://github.com/Rzezimioszek/MRTPS
 category=Plugins
 icon=icon.png
 # experimental flag
